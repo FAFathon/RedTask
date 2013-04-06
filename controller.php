@@ -9,12 +9,11 @@ switch ($_GET['action'])
 {
     case 'addTask':
         $task = new TaskService();
-        echo(json_encode($task->addTask($_GET['title'])));
+        echo(json_encode($task->addTask($_POST['title'])));
         break;
 
     case 'editTask':
-        //$data = json_decode($_POST['data']);
-        $data = json_decode($_GET['data']);
+        $data = json_decode($_POST['data']);
         $data = get_object_vars($data);
 
         $task = new TaskService();
