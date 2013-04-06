@@ -17,7 +17,7 @@ switch ($_GET['action'])
         $data = get_object_vars($data);
 
         $task = new TaskService();
-        $task->editTask($_GET['id'], $data);
+        $task->editTask($_POST['id'], $data);
         echo(json_encode(true));
         break;
 
