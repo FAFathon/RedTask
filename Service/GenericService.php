@@ -5,11 +5,10 @@
 	class GenericService {
 		public static $db = NULL;
 
-		
-		protected function connect() {
+		protected function __construct() {
 			global $config;
-			if ($this->db == NULL) {
-				$this->db = new MysqlDB($config['host'], $config['username'], $config['password'], $config['db']);
+			if (self::$db == NULL) {
+				self::$db = new MysqlDB($config['host'], $config['username'], $config['password'], $config['db']);
 			}
 		}
 	}
