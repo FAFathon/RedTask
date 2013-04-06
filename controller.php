@@ -8,7 +8,18 @@ if(!isset($_GET['action']))
 switch ($_GET['action'])
 {
     case 'addTask':
-        echo(json_encode($_GET));
+        $task = new TaskService();
+        echo(json_encode($task->addTask($_GET['title'])));
+        break;
+
+    case 'editTask':
+        //$data = json_decode($_POST['data']);
+        $data = json_decode($_GET['data']);
+        $data = get_object_vars($data);
+
+        $task = new TaskService();
+        $task->editTask($_GET['id'], $data);
+        echo(json_encode(true));
         break;
 
     case 'getTask':

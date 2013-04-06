@@ -11,6 +11,11 @@ class MysqlDB {
         $this->_mysql->set_charset("utf8");
     }
 
+    public function lastInsertID()
+    {
+        return $this->_mysql->insert_id;
+    }
+
     /**
     *
     * @param string $query Contains a user-provided select query.
