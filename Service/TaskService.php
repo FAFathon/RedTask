@@ -33,8 +33,6 @@
 		}
 
 		public function addTask($name) {
-			//INSERT INTO table_name (column1, column2, column3,...)
-			//VALUES (value1, value2, value3,...)
 			$params = array('name' => $name);
 			$query = "INSERT INTO `tasks` (`tasks`.`title`) VALUES (:name)";
 			self::$db->Q($query, $params);
