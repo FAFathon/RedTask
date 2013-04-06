@@ -9,7 +9,7 @@
 			parent::__construct();
 		}
 
-		function getTask($id) {
+		public function getTask($id) {
 			$params = array('id' => $id);
 			$query1 = "SELECT * FROM `tasks` WHERE `tasks`.`id` = :id";
 			$query2 = "SELECT * FROM `label_task` LEFT JOIN `labels` ON `label_task`.`label_id` = `labels`.`id` WHERE `label_task`.`task_id` = :id";
@@ -18,7 +18,7 @@
 			return $task;
 		}
 
-		function getTasks() {
+		public function getTasks() {
 			$tasks;
 			$query = "SELECT * FROM `tasks`";
 
@@ -32,17 +32,87 @@
 			return $tasks;
 		}
 
-		function addTask($name) {
-			//INSERT INTO table_name (column1, column2, column3,...)
-			//VALUES (value1, value2, value3,...)
+		public function addTask($name) {
 			$params = array('name' => $name);
 			$query = "INSERT INTO `tasks` (`tasks`.`title`) VALUES (:name)";
 			self::$db->Q($query, $params);
 		}
 
-	}
+		public function editTask($id, $params) {
+			$params['id'] = $id;
+			$task = new Task($params);
+			$this->persistTask($task);
+		}
 
-	$pearja = new TaskService();
-	$pearja->addTask("Sa fac perojoace");
+		protected function persistTask($task) {
+			$set_query = "";
+			$params = array();
+			
+			$value = $task->getTitle();
+			if (isset($value)) {
+				$index = "title";
+				$params[$index] = $value;
+				$set_query .= $index . ' = :' . $index;
+			}
+			
+			$value = $task->getDescription();
+			if (isset($value)) {
+				$index = "description";
+				$params[$index] = $value;
+				$set_query .= ', ' . $index . ' = :' . $index;
+			}
+
+			$value = $task->getDeadline();
+			if (isset($value)) {
+				$index = "deadline";
+				$params[$index] = $value;
+				$set_query .= ', ' . $index . ' = :' . $index;
+			}
+
+			$value = $task->getTimeEstimated();
+			if (isset($value)) {
+				$index = "time_estimated";
+				$params[$index] = $value;
+				$set_query .= ', ' . $index . ' = :' . $index;
+			}
+
+			$value = $task->getTimeSpent();
+			if (isset($value)) {
+				$index = "time_spent";
+				$params[$index] = $value;
+				$set_query .= ', ' . $index . ' = :' . $index;
+			}
+
+			$value = $task->getPriority();
+			if (isset($value)) {
+				$index = "priority";
+				$params[$index] = $value;
+				$set_query .= ', ' . $index . ' = :' . $index;
+			}
+
+			$value = $task->getProgress();
+			if (isset($value)) {
+				$index = "progress";
+				$params[$index] = $value;
+				$set_query .= ', ' . $index . ' = :' . $index;
+			}
+
+			$value = $task->getWeigth();
+			if (isset($value)) {
+				$index = "weigth";
+				$params[$index] = $value;
+				$set_query .= ', ' . $index . ' = :' . $index;
+			}
+
+			$query = "UPDATE `tasks` SET " . $set_query . " WHERE `tasks`.`id` = :id";
+			echo $query;
+			
+			$value = $task->getId();
+			if (isset($value)) {
+				$params['id'] = $task->getId();
+				self::$db->Q($query, $params);
+			}
+		}
+	}
 ?>
 

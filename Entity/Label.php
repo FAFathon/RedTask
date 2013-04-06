@@ -8,9 +8,12 @@
 			if ($array == NULL)
 				return;
 
-			$this->setId($array['id']);
-			$this->setName($array['name']);
-			$this->setDescription($array['description']);
+			if (isset($array['id']))
+				$this->setId($array['id']);
+			if (isset($array['name']))
+				$this->setName($array['name']);
+			if (isset($array['description']))
+				$this->setDescription($array['description']);
 		}
 
 
