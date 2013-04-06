@@ -17,7 +17,9 @@
 		private $labels;
 
 
-
+		/**
+		* @param set 2 dimensional array
+		*/
 		function __construct($array = NULL) {
 			if ($array == NULL)
 				return;
