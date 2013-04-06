@@ -24,7 +24,7 @@ switch ($_GET['action'])
     case 'getTask':
         $task = new TaskService();
         $task = $task->getTask($_GET['id']);
-        echo(encodeTaskJSON($task));
+        echo(encodeTask(json_encode($task)));
         break;
 
     case 'getTasks':
@@ -33,7 +33,7 @@ switch ($_GET['action'])
         $result = array();
         foreach($tasks AS $elm)
         {
-            $result[] = encodeTaskJSON($elm);
+            $result[] = encodeTask($elm);
         }
 
         echo(json_encode($result));
@@ -49,7 +49,7 @@ switch ($_GET['action'])
 * @param object $task A task object which contains the labels also.
 * @return string JSON encoded array.
 */
-function encodeTaskJSON($task)
+function encodeTask($task)
 {
     $taskArr = array();
     $taskArr['id'] = $task->getId();
@@ -68,5 +68,5 @@ function encodeTaskJSON($task)
     {
         $taskArr['labels'][ $label->getId() ] = $label->getName();
     }*/
-    return json_encode($taskArr);
+    return $taskArr;
 }
