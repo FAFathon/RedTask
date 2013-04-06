@@ -10,22 +10,28 @@
 		}
 
 		function getTask($id) {
-			$params = array('id' => $id);	
+			$params = array('id' => $id);
 			$query1 = "SELECT * FROM `tasks` WHERE `tasks`.`id` = :id";
 			$query2 = "SELECT * FROM `label_task` LEFT JOIN `labels` ON `label_task`.`label_id` = `labels`.`id` WHERE `label_task`.`task_id` = :id";
-			var_dump(self::$db->fetchAll($query2, $params));
 			$task = new Task(self::$db->fetchAll($query1, $params)[0]);
 			$task->uploadLabels(self::$db->fetchAll($query2, $params));
 			return $task;
 		}
 
-	}
+		function getTasks() {
+			$tasks;
+			$query = "SELECT * FROM `tasks`";
 
-	$pearja = new TaskService();
-	$task = $pearja->getTask(1);
-	echo $task->getId();
-	foreach ($task->getLabels() as $value) {
-		$value->getName();
+			foreach (self::$db->fetchAll($query) as $value) {
+				$task = new Task($value);
+				$params = array('id' => $task->getId());
+				$queryLabel = "SELECT * FROM `label_task` LEFT JOIN `labels` ON `label_task`.`label_id` = `labels`.`id` WHERE `label_task`.`task_id` = :id";
+				$task->uploadLabels(self::$db->fetchAll($queryLabel, $params));
+				$tasks[] = $task;
+			}
+			return $tasks;
+		}
+
 	}
 
 ?>
