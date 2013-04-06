@@ -27,6 +27,18 @@ switch ($_GET['action'])
         echo(encodeTaskJSON($task));
         break;
 
+    case 'getTasks':
+        $task = new TaskService();
+        $tasks = $task->getTasks();
+        $result = array();
+        foreach($tasks AS $elm)
+        {
+            $result[] = encodeTaskJSON($elm);
+        }
+
+        echo(json_encode($result));
+        break;
+
     default:
         die('Unimplemented.');
         break;
@@ -52,9 +64,9 @@ function encodeTaskJSON($task)
     $taskArr['labels'] = array();
     $labels = $task->getLabels();
 
-    foreach($labels AS $label)
+    /*foreach($labels AS $label)
     {
         $taskArr['labels'][ $label->getId() ] = $label->getName();
-    }
+    }*/
     return json_encode($taskArr);
 }
