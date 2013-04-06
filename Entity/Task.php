@@ -1,4 +1,6 @@
 <?php
+	require_once "Label.php";
+
 	class Task {
 		private $id;
 		private $title;
@@ -9,6 +11,36 @@
 		private $priority;
 		private $progress;
 		private $weigth;
+
+		// Array of labe Objects
+		private $labels;
+
+
+
+		function __construct($array = NULL) {
+			if ($array == NULL)
+				return;
+
+			$this->setId($array['id']);
+			$this->setTitle($array['title']);
+			$this->setDescription($array['description']);
+			$this->setDeadline($array['deadline']);
+			$this->setTimeEstimated($array['time_estimated']);
+			$this->setTimeSpent($array['time_spent']);
+			$this->setPriority($array['time_spent']);
+			$this->setProgress($array['progress']);
+			$this->setWeigth($array['weight']);
+		}
+
+		/**
+		* @param 2 dimensional array
+		*/
+		function uploadLabels($array_2D) {
+			foreach ($array_2D as $value) {
+				$this->labels[] = new Label($value);
+			}
+		}
+
 
 		public function getId() {
 			return $this->id;
@@ -73,6 +105,13 @@
 			$this->weigth = $weigth;
 		}
 
+		public function getLabels() {
+			return $this->labels;
+		}
+		public function setLabels($labels) {
+			$this->labels = $labels;
+		}
+
 		/* <<< Prototype >>>
 		
 		public function get() {
@@ -82,6 +121,5 @@
 			$this-> = $;
 		}
 		*/
-
 	}
 ?>

@@ -4,6 +4,15 @@
 		private $name;
 		private $description;
 
+		function __construct($array = NULL) {
+			if ($array == NULL)
+				return;
+
+			$this->setId($array['id']);
+			$this->setName($array['name']);
+			$this->setDescription($array['description']);
+		}
+
 
 		public function getId() {
 			return $this->id;
