@@ -1,6 +1,6 @@
 <?php
-	$host = "localhost";
-	$username = "root";
-	$password = "1111";
-	$db = "tt_manager";
+	$config['host'] = "localhost";
+	$config['username'] = "root";
+	$config['password'] = "1111";
+	$config['db'] = "tt_manager";
 ?>
