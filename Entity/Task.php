@@ -23,16 +23,24 @@
 		function __construct($array = NULL) {
 			if ($array == NULL)
 				return;
-
-			$this->setId($array['id']);
-			$this->setTitle($array['title']);
-			$this->setDescription($array['description']);
-			$this->setDeadline($array['deadline']);
-			$this->setTimeEstimated($array['time_estimated']);
-			$this->setTimeSpent($array['time_spent']);
-			$this->setPriority($array['time_spent']);
-			$this->setProgress($array['progress']);
-			$this->setWeigth($array['weight']);
+			if (isset($array['id'])) 
+				$this->setId($array['id']);
+			if (isset($array['title']))
+				$this->setTitle($array['title']);
+			if (isset($array['description']))
+				$this->setDescription($array['description']);
+			if (isset($array['deadline']))
+				$this->setDeadline($array['deadline']);
+			if (isset($array['time_estimated']))
+				$this->setTimeEstimated($array['time_estimated']);
+			if (isset($array['time_spent']))
+				$this->setTimeSpent($array['time_spent']);
+			if (isset($array['time_spent']))
+				$this->setPriority($array['time_spent']);
+			if (isset($array['progress']))
+				$this->setProgress($array['progress']);
+			if (isset($array['weight']))
+				$this->setWeigth($array['weight']);
 		}
 
 		/**
