@@ -93,7 +93,7 @@
 				return $task;
 			} 
 			if ($dlDelta >= $necessaryTime/2 && $dlDelta < $necessaryTime){
-				$weight = ( 1200000 * ( log($priority + 0.25) / ( 4 * log( ( $dlDelta / $necessaryTime - 1 ) * 0.75 + 2 ) ) + 1 ) ) / ($dlDelta + 500) + 1000;
+				$weight = ( 1200000 * ( log($priority + 0.25) / ( 4 * log( ( $dlDelta / $necessaryTime - 1 ) * 1.5 + 2 ) ) + 1 ) ) / ($dlDelta + 500) + 1000;
 				$task->setWeigth(intval($weight));
 				return $task;
 			} 
