@@ -22,7 +22,7 @@
           <div class="nav-collapse collapse">
             <ul class="nav">
               <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
+              <li><a class="active" href="countdown.html">Countdown</a></li>
               <li><a href="#contact">Contact</a></li>
             </ul>
           </div><!--/.nav-collapse -->
@@ -35,7 +35,7 @@
 		    <div class="span12 list_container container-fluid">
 		    	<div class="row-fluid">
 		    		<div class="top_buttons span12">
-			    		<button class="span6 btn btn-danger">Randomize</button>
+			    		<button class="span6 btn btn-danger randomize_select">Randomize</button>
 			    		<button class="span6 btn btn-success optimized_select">Optimized</button>
 		    		</div>
 					<form method="post" action="#" id="addTask" class="span12" style="margin: 0;">
@@ -55,12 +55,15 @@
 	            <div class="row-fluid">
 	            	<form action="#" id="edit_form">
 		                <div class="span12" style="margin-top:5px;">
+		                	<div class="row-fluid">
+			                    <button class="btn btn-success span12 start_working_button">Start working</button>
+		                    </div>
 		                    <div class="span8">
 		                        <label class="item_title">
 		                        	<h3></h3>
 		                        </label>
 		                    </div>
-		                    <div class="span3 offset1 stars">
+		                    <div class="span2 offset1 stars">
 		                        <i data-order="1" class="icon-star selected"></i>
 		                        <i data-order="2" class="icon-star selected"></i>
 		                        <i data-order="3" class="icon-star-empty"></i>
@@ -165,6 +168,7 @@
 				item_info.css("display", "block");
 				item_info.find(".item_title > *").text(item.text());
 				item_info.find(".task_id").val(item.attr("data-id"));
+				item_info.find(".start_working_button").attr("data-id", item.attr("data-id"));
 
 				// initialize deadline time field
 				if($("#dl_time"))
@@ -331,6 +335,20 @@
             	var item = $("#task_list .item");
             	localStorage['task_id'] = item.attr("data-id");
             	window.location.href = "countdown.html";
+            });
+
+            $(".randomize_select").click(function(){
+            	var item = $("#task_list .item");
+            	var rand = Math.random()*(item.length-1)+1;
+            	rand = Math.floor(rand);
+            	localStorage['task_id'] = $(item[rand]).attr("data-id");
+            	window.location.href = "countdown.html";
+            });
+            $(".start_working_button").click(function(){
+            	localStorage['task_id'] = $(this).attr("data-id");
+            	setTimeout(function(){
+            		window.location.href = "countdown.html";
+            	}, 500);
             });
 		});
 	</script>
