@@ -52,45 +52,53 @@
 
 	        <div class="span4 item_info" style="background-color:rgb(244,244,244); display: none; padding-left:10px; padding-right:10px">
 	            <div class="row-fluid">
-	                <div class="span12" style="margin-top:5px;">
-	                    <div class="span8">
-	                        <label class="item_title">
-	                        	<h3></h3>
-	                        </label>
-	                    </div>
-	                    <div class="span3 offset1 stars">
-	                        <i data-order="1" class="icon-star selected"></i>
-	                        <i data-order="2" class="icon-star-empty"></i>
-	                        <i data-order="3" class="icon-star-empty"></i>
-	                    </div>
-	                </div>
-	                <div class="row-fluid">
-	                    <div class="span12">
-	                        
-	                        <div class="form-actions">
-	                            <label for="deadline" class="span12 tl"><h5>Deadline</h5></label>
-	                            <div class="controls">
-	                            	<label for="deadline"><i class="icon-calendar" ></i>
-		                                <input id="deadline" name="date" class="span10 datepicker" type="date" placeholder="date">
-	                                </label>
-	                                <label><h5>Estimated time</h5></label>
-                                	<div class="estimated_time">
-                                		<i class="icon-time" ></i>
-	                                    <input class="span2 hours" type="text" placeholder="hh"> :
-	                                    <input class="span2 minutes" type="text" placeholder="mm">
-		                                <input id="time_slider" step="900" type="range" name="time" min="0" max="86399" style="width: 95%;">
-	                                </div>
-	                                <label for="info_label"><h5>Label</h5></label>
-	                                <input id="info_label" type="text" name="label" placeholder="label">
-					                <h5>Progress</h5>
-					                <div class="progress">
-					                    <div name="statusBar" class="bar bar-success" style="width: 35%;"></div>
-					                </div>
-	                            </div>
-	                            <input type="submit" name="submit" class="btn btn-primary span12">
-	                        </div>  
-	                    </div>
-	                </div>
+	            	<form action="#" id="edit_form">
+		                <div class="span12" style="margin-top:5px;">
+		                    <div class="span8">
+		                        <label class="item_title">
+		                        	<h3></h3>
+		                        </label>
+		                    </div>
+		                    <div class="span3 offset1 stars">
+		                        <i data-order="1" class="icon-star selected"></i>
+		                        <i data-order="2" class="icon-star-empty"></i>
+		                        <i data-order="3" class="icon-star-empty"></i>
+		                        <input type="hidden" value="1" name="priority">
+		                    </div>
+		                </div>
+		                <div class="row-fluid">
+		                    <div class="span12">
+		                        
+		                        <div class="form-actions">
+		                            <label for="deadline" class="span12 tl"><h5>Deadline date</h5></label>
+		                            <div class="controls">
+		                            	<input class="task_id" type="hidden" name="id">
+		                            	<label for="deadline"><i class="icon-calendar" ></i>
+			                                <input id="deadline" name="dl_date" class="span10 datepicker" type="date" placeholder="date">
+		                                </label>
+		                                <label for="dl_minutes"><h5>Deadline time</h5></label>
+		                                <i class="icon-time"></i>
+		                                <input id="dl_hours" type="number" min="0" max="23" name="dl_hours" class="span2" value="0"> :
+		                                <input id="dl_minutes" type="number" min="0" max="59" name="dl_minutes" class="span2" value="0">
+		                                <label><h5>Estimated time ( for completing )</h5></label>
+	                                	<div class="estimated_time">
+	                                		<i class="icon-time" ></i>
+		                                    <input class="span2 hours" type="text" value="1" placeholder="hh"> hours :
+		                                    <input class="span2 minutes" type="text" value="0" placeholder="mm"> minutes
+			                                <input id="time_slider" step="900" type="range" name="time" value="3600" min="0" max="86399" style="width: 95%;">
+		                                </div>
+		                                <label for="info_label"><h5>Label</h5></label>
+		                                <input id="info_label" type="text" name="label" placeholder="label">
+						                <h5>Progress</h5>
+						                <div class="progress">
+						                    <div name="statusBar" class="bar bar-success" style="width: 35%;"></div>
+						                </div>
+		                            </div>
+		                            <input type="submit" name="submit" class="btn btn-primary span12">
+		                        </div>  
+		                    </div>
+		                </div>
+	                </form>
 	            </div> 
 	        </div>
 
@@ -120,6 +128,15 @@
 		};
 
 		$(document).ready(function(){
+
+			$.get('controller.php?action=getTasks', function(result){
+				var json = JSON.parse(result);
+				json.forEach(function(item){
+					$("#task_list").append('<div class="row-fluid"><div data-id="'+item.id+'" class="btn span12 item tl">'+item.title+'<i class="icon-chevron-right" style="float: right;"></i></div></div>');
+				});
+				item_bind();
+			});
+
 			$("input").keypress(function(event) {
 			    if (event.which == 13) {
 			        event.preventDefault();
@@ -131,6 +148,7 @@
 				var item_info = $(".main_container > .row-fluid .item_info");
 				item_info.css("display", "block");
 				item_info.find(".item_title > *").text(item.text());
+				item_info.find(".task_id").val(item_info.attr("data-id"));
 			}
 
 			function item_bind(){
@@ -161,10 +179,15 @@
 				});
 				if(!mandatory_ok)
 					return;
-				var serialized = $(this).extractObject();
-				$(this).find("input").val("");
-				$("#task_list").append('<div class="row-fluid"><div class="btn span12 item tl">'+serialized.title+'<i class="icon-chevron-right" style="float: right;"></i></div></div>');
-				item_bind();
+				var serialized = $(this).serialize();
+				var json = $(this).extractObject();
+				var $this = $(this);
+				$.post("controller.php?action=addTask", serialized, function(response){
+					$this.find("input").val("");
+					var object = JSON.parse(response);
+					$("#task_list").append('<div class="row-fluid"><div data-id="'+object.id+'" class="btn span12 item tl">'+json.title+'<i class="icon-chevron-right" style="float: right;"></i></div></div>');
+					item_bind();
+				});
 			});
 
 
@@ -201,6 +224,7 @@
             $(".stars *").click(function(){
                 $this = $(this);
                 $this.addClass("selected");
+                $(".stars input[name=priority]").val($this.attr("data-order"));
                 $this.siblings().each(function(){
                     if($(this).attr("data-order") < $this.attr("data-order"))
                         $(this).addClass("selected");
