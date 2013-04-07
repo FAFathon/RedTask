@@ -5,7 +5,8 @@
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.min.css">
 	<link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css">
-	<link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-timepicker.min.css" />
 </head>
 <body>
 
@@ -73,19 +74,20 @@
 		                            <label for="dl_date" class="span12 tl"><h5>Deadline date</h5></label>
 		                            <div class="controls">
 		                            	<input class="task_id" type="hidden" name="id">
-		                            	<label for="dl_date"><i class="icon-calendar" ></i>
-			                                <input id="dl_date" name="dl_date" class="span10 datepicker" type="text" placeholder="date">
-		                                </label>
-		                                <label for="dl_minutes"><h5>Deadline time</h5></label>
-		                                <i class="icon-time"></i>
-		                                <input id="dl_hours" type="number" min="0" max="23" name="dl_hours" class="span2" value="0"> :
-		                                <input id="dl_minutes" type="number" min="0" max="59" name="dl_minutes" class="span2" value="0">
+                                        <div class="input-prepend">
+                                            <span class="add-on"><i class="icon-calendar"></i></span>
+			                                <input id="deadline" name="dl_date" class="span10 datepicker" type="text" placeholder="date">
+		                                </div>
+                                        <div class="input-append bootstrap-timepicker">
+		                                    <input id="dl_time" type="text" name="dl_time" class="input-small">
+                                            <span class="add-on"><i class="icon-time"></i></span>
+                                        </div>
 		                                <label><h5>Estimated time ( for completing )</h5></label>
 	                                	<div class="estimated_time">
 	                                		<i class="icon-time" ></i>
 		                                    <input class="span2 hours" type="number" min="0" max="23" value="1" placeholder="hh"> hours :
 		                                    <input class="span2 minutes" type="number" min="0" max="59" value="0" placeholder="mm"> minutes
-			                                <input id="time_slider" step="900" type="range" name="time" value="3600" min="0" max="86399" style="width: 95%;">
+			                                <input id="time_slider" step="900" type="range" name="time_estimated" value="3600" min="0" max="86399" style="width: 95%;">
 		                                </div>
 		                                <label for="info_label"><h5>Label</h5></label>
 		                                <input id="info_label" type="text" name="label" placeholder="label">
@@ -107,7 +109,8 @@
 
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="js/jquery-ui.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.js"></script>
+    <script type="text/javascript" src="js/bootstrap-timepicker.min.js"></script>
 	<script type="text/javascript">
 
 		jQuery.fn.serializeObject = function() {
@@ -279,6 +282,15 @@
             $(".estimated_time input[type=number]").change(function(){
             	$(".estimated_time input[type=range]").val($(".estimated_time input.hours").val()*3600 + $(".estimated_time input.minutes").val()*60)
             });
+
+            $('#dl_time').timepicker({
+                minuteStep: 5,
+                showSeconds: false,
+                showMeridian: false,
+                defaultTime: 'current'
+            });
+
+            $('#dl_time').timepicker('setTime', '12:45');
 		});
 	</script>
 </body>
