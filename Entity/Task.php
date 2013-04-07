@@ -35,8 +35,8 @@
 				$this->setTimeEstimated($array['time_estimated']);
 			if (isset($array['time_spent']))
 				$this->setTimeSpent($array['time_spent']);
-			if (isset($array['time_spent']))
-				$this->setPriority($array['time_spent']);
+			if (isset($array['priority']))
+				$this->setPriority($array['priority']);
 			if (isset($array['progress']))
 				$this->setProgress($array['progress']);
 			if (isset($array['weight']))
