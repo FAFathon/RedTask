@@ -32,10 +32,12 @@
 			return $tasks;
 		}
 
-		public function addTask($name) {
+        public function addTask($name) {
 			$params = array('name' => $name);
 			$query = "INSERT INTO `tasks` (`tasks`.`title`) VALUES (:name)";
-			self::$db->Q($query, $params);
+            self::$db->Q($query, $params);
+            $inserted_id = self::$db->lastInsertID();
+            return array('id' => $inserted_id);
 		}
 
 
@@ -189,14 +191,14 @@
 		public function persistTask($task) {
 			$set_query = "";
 			$params = array();
-			
+
 			$value = $task->getTitle();
 			if (isset($value)) {
 				$index = "title";
 				$params[$index] = $value;
 				$set_query .= $index . ' = :' . $index;
 			}
-			
+
 			$value = $task->getDescription();
 			if (isset($value)) {
 				$index = "description";
@@ -247,7 +249,12 @@
 			}
 
 			$query = "UPDATE `tasks` SET " . $set_query . " WHERE `tasks`.`id` = :id";
+<<<<<<< HEAD
 			
+=======
+			//echo $query;
+
+>>>>>>> d14c3b1384c7ecb3f6d88f141902835c9a9d8c06
 			$value = $task->getId();
 			if (isset($value)) {
 				$params['id'] = $task->getId();

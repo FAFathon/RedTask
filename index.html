@@ -1,0 +1,297 @@
+<!doctype html>
+<html>
+<head>
+	<title>Tomatask!</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.min.css">
+	<link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-timepicker.min.css" />
+</head>
+<body>
+
+	<div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">TomaTask</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 50px;" class="main_container container_fluid">
+    	<div class="row-fluid">
+		    <div class="span12 list_container container-fluid">
+		    	<div class="row-fluid">
+		    		<div class="top_buttons span12">
+			    		<button class="span12 btn btn-danger">Randomize</button>
+			    		<!-- <button class="span6 btn btn-info">Randomize</button> -->
+		    		</div>
+					<form method="post" action="#" id="addTask" class="span12" style="margin: 0;">
+						<input type="text" placeholder="Add a task" class="input-medium span12 mandatory" name="title">
+					</form>
+				</div>
+				<div id="task_list">
+					<div class="row-fluid">
+						<div class="btn span12 item tl">Finish the project!
+							<i class="icon-chevron-right" style="float: right;"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+
+	        <div class="span4 item_info" style="background-color:rgb(244,244,244); display: none; padding-left:10px; padding-right:10px">
+	            <div class="row-fluid">
+	            	<form action="#" id="edit_form">
+		                <div class="span12" style="margin-top:5px;">
+		                    <div class="span8">
+		                        <label class="item_title">
+		                        	<h3></h3>
+		                        </label>
+		                    </div>
+		                    <div class="span3 offset1 stars">
+		                        <i data-order="1" class="icon-star selected"></i>
+		                        <i data-order="2" class="icon-star selected"></i>
+		                        <i data-order="3" class="icon-star-empty"></i>
+		                        <input type="hidden" value="2" name="priority">
+		                    </div>
+		                </div>
+		                <div class="row-fluid">
+		                    <div class="span12">
+
+		                        <div class="form-actions">
+		                            <label for="dl_date" class="span12 tl"><h5>Deadline date</h5></label>
+		                            <div class="controls">
+		                            	<input class="task_id" type="hidden" name="id">
+                                        <div class="input-prepend">
+                                            <span class="add-on"><i class="icon-calendar"></i></span>
+			                                <input id="deadline" name="dl_date" class="span10 datepicker" type="text" placeholder="date">
+		                                </div>
+                                        <div class="input-append bootstrap-timepicker">
+		                                    <input id="dl_time" type="text" name="dl_time" class="input-small">
+                                            <span class="add-on"><i class="icon-time"></i></span>
+                                        </div>
+		                                <label><h5>Estimated time ( for completing )</h5></label>
+	                                	<div class="estimated_time">
+	                                		<i class="icon-time" ></i>
+		                                    <input class="span2 hours" type="number" min="0" max="23" value="1" placeholder="hh"> hours :
+		                                    <input class="span2 minutes" type="number" min="0" max="59" value="0" placeholder="mm"> minutes
+			                                <input id="time_slider" step="900" type="range" name="time_estimated" value="3600" min="0" max="86399" style="width: 95%;">
+		                                </div>
+		                                <label for="info_label"><h5>Label</h5></label>
+		                                <input id="info_label" type="text" name="label" placeholder="label">
+						                <h5>Progress</h5>
+						                <div class="progress">
+						                    <div name="statusBar" class="bar bar-success" style="width: 35%;"></div>
+						                </div>
+		                            </div>
+		                            <input type="submit" name="submit" class="btn btn-primary span12">
+		                        </div>
+		                    </div>
+		                </div>
+	                </form>
+	            </div>
+	        </div>
+
+		</div>
+	</div>
+
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.js"></script>
+    <script type="text/javascript" src="js/bootstrap-timepicker.min.js"></script>
+	<script type="text/javascript">
+
+		jQuery.fn.serializeObject = function() {
+		  var arrayData, objectData;
+		  arrayData = this.serializeArray();
+		  objectData = {};
+
+		  $.each(arrayData, function() {
+		    var value;
+
+		    if (this.value != null) {
+		      value = this.value;
+		    } else {
+		      value = '';
+		    }
+
+		    if (objectData[this.name] != null) {
+		      if (!objectData[this.name].push) {
+		        objectData[this.name] = [objectData[this.name]];
+		      }
+
+		      objectData[this.name].push(value);
+		    } else {
+		      objectData[this.name] = value;
+		    }
+		  });
+
+		  return objectData;
+		};
+
+		$(document).ready(function(){
+
+			$.get('controller.php?action=getTasks', function(result){
+				var json = JSON.parse(result);
+				json.forEach(function(item){
+					$("#task_list").append('<div class="row-fluid"><div data-id="'+item.id+'" class="btn span12 item tl">'+item.title+'<i class="icon-chevron-right" style="float: right;"></i></div></div>');
+				});
+				item_bind();
+			});
+
+			$("input").keypress(function(event) {
+			    if (event.which == 13) {
+			        event.preventDefault();
+			        $("form").submit();
+			    }
+			});
+
+			function append_options(item){
+				var item_info = $(".main_container > .row-fluid .item_info");
+				item_info.css("display", "block");
+				item_info.find(".item_title > *").text(item.text());
+				item_info.find(".task_id").val(item.attr("data-id"));
+				var date = new Date();
+				var month = date.getMonth()+1;
+				if(month < 10)
+					month = "0"+month;
+				var day = date.getDate();
+				if(day < 10)
+					day = "0"+day;
+				var dl_date = date.getFullYear()+"-"+month+"-"+day;
+				item_info.find("#dl_date").val(dl_date);
+				item_info.find("#dl_hours").val(date.getHours()+1);
+				item_info.find("#dl_minutes").val(date.getMinutes())
+			}
+
+			function item_bind(){
+				$("#task_list .item").click(function(){
+					$(".list_container").removeClass("span12").addClass("span8");
+					append_options($(this));
+				});
+
+				$("#task_list .item").mouseover(function(){
+					$(this).addClass("btn-info");
+					$(this).find("i").removeClass("icon-white").addClass("icon-white");
+				});
+
+				$("#task_list .item").mouseout(function(){
+					$(this).removeClass("btn-info");
+					$(this).find("i").removeClass("icon-white");
+				});
+			};
+			item_bind();
+
+			$("#addTask").submit(function(e){
+				e.preventDefault();
+				var mandatory_ok = 1;
+				$(this).find(".mandatory").each(function(){
+					if($(this).val().length == 0)
+						mandatory_ok = 0;
+						return 0;
+				});
+				if(!mandatory_ok)
+					return;
+				var serialized = $(this).serialize();
+				var json = $(this).serializeObject();
+				var $this = $(this);
+				$.post("controller.php?action=addTask", serialized, function(response){
+					$this.find("input").val("");
+					var object = JSON.parse(response);
+					$("#task_list").append('<div class="row-fluid"><div data-id="'+object.id+'" class="btn span12 item tl">'+json.title+'<i class="icon-chevron-right" style="float: right;"></i></div></div>');
+					item_bind();
+				});
+			});
+
+
+            $(".stars *").mouseover(function(){
+                $this = $(this);
+                $(this).removeClass("icon-star-empty").addClass("icon-star");
+                $(this).siblings().each(function(item){
+                    if(!$(this).hasClass("selected"))
+                        if($(this).attr("data-order") < $this.attr("data-order"))
+                            $(this).removeClass("icon-star-empty").addClass("icon-star");
+                        else
+                            $(this).removeClass("icon-star").addClass("icon-star-empty");
+                });
+            });
+            $(".stars *").mouseout(function(){
+                $this = $(this);
+                // $(this).addClass("icon-star-empty").removeClass("icon-star");
+                $(this).siblings().each(function(item){
+                    if(!$(this).hasClass("selected"))
+                        if($(this).attr("data-order") > $this.attr("data-order")){
+                            $(this).removeClass("icon-star").addClass("icon-star-empty");
+                        }
+                });
+            });
+            $(".stars").mouseout(function(){
+                $this = $(this);
+                // $(this).addClass("icon-star-empty").removeClass("icon-star");
+                $(this).children().each(function(){
+                    if(!$(this).hasClass("selected")){
+                        $(this).removeClass("icon-star").addClass("icon-star-empty");
+                    }
+                });
+            });
+            $(".stars *").click(function(){
+                $this = $(this);
+                $this.addClass("selected");
+                $(".stars input[name=priority]").val($this.attr("data-order"));
+                $this.siblings().each(function(){
+                    if($(this).attr("data-order") < $this.attr("data-order"))
+                        $(this).addClass("selected");
+                    else
+                        $(this).removeClass("selected").removeClass("icon-star").addClass("icon-star-empty");
+                });
+            });
+            $("#time_slider").change(function(){
+            	var hours = Math.floor($(this).val()/3600);
+            	var minutes = Math.floor(($(this).val() - hours*3600)/60);
+            	$(".estimated_time .hours").val(hours);
+            	$(".estimated_time .minutes").val(minutes);
+            });
+            $(".datepicker").datepicker({dateFormat: "yy-mm-dd"});
+
+            $("#edit_form").submit(function(e){
+            	e.preventDefault();
+            	$(this).find("input:not([type=submit])").each(function(){
+            		if($(this).val().length == 0)
+            			$(this).val(0);
+            	});
+            	var serialized = $(this).serialize();
+            	var json = $(this).serializeObject();
+            	json = JSON.stringify(json);
+            	$.post('controller.php?action=editTask', {data: json}, function(result){
+            		console.log(result);
+            	});
+            });
+
+            $(".estimated_time input[type=number]").change(function(){
+            	$(".estimated_time input[type=range]").val($(".estimated_time input.hours").val()*3600 + $(".estimated_time input.minutes").val()*60)
+            });
+
+            $('#dl_time').timepicker({
+                minuteStep: 5,
+                showSeconds: false,
+                showMeridian: false,
+                defaultTime: 'current'
+            });
+
+            $('#dl_time').timepicker('setTime', '12:45');
+		});
+	</script>
+</body>
+</html>

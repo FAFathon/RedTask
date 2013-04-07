@@ -8,13 +8,35 @@ if(!isset($_GET['action']))
 switch ($_GET['action'])
 {
     case 'addTask':
-        echo(json_encode($_GET));
+        $task = new TaskService();
+        echo(json_encode($task->addTask($_POST['title'])));
+        break;
+
+    case 'editTask':
+        $data = json_decode($_POST['data']);
+        $data = get_object_vars($data);
+
+        $task = new TaskService();
+        $task->editTask($_POST['id'], $data);
+        echo(json_encode(true));
         break;
 
     case 'getTask':
         $task = new TaskService();
         $task = $task->getTask($_GET['id']);
-        echo(encodeTaskJSON($task));
+        echo(encodeTask(json_encode($task)));
+        break;
+
+    case 'getTasks':
+        $task = new TaskService();
+        $tasks = $task->getTasks();
+        $result = array();
+        foreach($tasks AS $elm)
+        {
+            $result[] = encodeTask($elm);
+        }
+
+        echo(json_encode($result));
         break;
 
     default:
@@ -27,7 +49,7 @@ switch ($_GET['action'])
 * @param object $task A task object which contains the labels also.
 * @return string JSON encoded array.
 */
-function encodeTaskJSON($task)
+function encodeTask($task)
 {
     $taskArr = array();
     $taskArr['id'] = $task->getId();
@@ -42,9 +64,9 @@ function encodeTaskJSON($task)
     $taskArr['labels'] = array();
     $labels = $task->getLabels();
 
-    foreach($labels AS $label)
+    /*foreach($labels AS $label)
     {
         $taskArr['labels'][ $label->getId() ] = $label->getName();
-    }
-    return json_encode($taskArr);
+    }*/
+    return $taskArr;
 }
