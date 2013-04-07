@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-	<title>Tomatask!</title>
+	<title>RedTask</title>
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.min.css">
 	<link rel="stylesheet" type="text/css" href="css/jquery-ui.min.css">
@@ -18,11 +18,11 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="#">TomaTask</a>
+          <a class="brand" href="index.html" style="max-height: 40px; margin: 0; padding: 0;" ><img style="max-height: 40px; margin: 0; padding: 0;" src="img/logo.png"></a>
           <div class="nav-collapse collapse">
             <ul class="nav">
               <li class="active"><a href="#">Home</a></li>
-              <li><a class="active" href="countdown.html">Countdown</a></li>
+              <li><a class="countdown_href" href="countdown.html">Countdown</a></li>
               <li><a href="#contact">Contact</a></li>
             </ul>
           </div><!--/.nav-collapse -->
@@ -350,6 +350,10 @@
             		window.location.href = "countdown.html";
             	}, 500);
             });
+            $(".countdown_href").click(function(e){
+            	e.preventDefault();
+            	$(".optimized_select").click();
+            })
 		});
 	</script>
 </body>
