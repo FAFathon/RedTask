@@ -36,7 +36,7 @@
 		    	<div class="row-fluid">
 		    		<div class="top_buttons span12">
 			    		<button class="span6 btn btn-danger">Randomize</button>
-			    		<button class="span6 btn btn-info">Optimized</button>
+			    		<button class="span6 btn btn-success optimized_select">Optimized</button>
 		    		</div>
 					<form method="post" action="#" id="addTask" class="span12" style="margin: 0;">
 						<input type="text" placeholder="Add a task" class="input-medium span12 mandatory" name="title">
@@ -159,21 +159,23 @@
 			});
 
 			function append_options(item){
-				var obj = JSON.parse(item.attr('data-json'));
+				if(item.attr('data-json'))
+					var obj = JSON.parse(item.attr('data-json'));
 				var item_info = $(".main_container > .row-fluid .item_info");
 				item_info.css("display", "block");
 				item_info.find(".item_title > *").text(item.text());
 				item_info.find(".task_id").val(item.attr("data-id"));
 
 				// initialize deadline time field
-	            $('#dl_time').timepicker({
-	                minuteStep: 5,
-	                showSeconds: false,
-	                showMeridian: false,
-	                defaultTime: 'current'
-	            });
+				if($("#dl_time"))
+		            $('#dl_time').timepicker({
+		                minuteStep: 5,
+		                showSeconds: false,
+		                showMeridian: false,
+		                defaultTime: 'current'
+		            });
 
-				if(obj.deadline){
+				if(obj){
 					var date = new Date(obj.deadline);
 					var month = date.getMonth()+1;
 					if(month < 10)
@@ -217,7 +219,7 @@
 				}
 
 
-			}
+			};
 
 			function item_bind(){
 				$("#task_list .item").click(function(){
@@ -253,6 +255,7 @@
 				$.post("controller.php?action=addTask", serialized, function(response){
 					$this.find("input").val("");
 					var object = JSON.parse(response);
+					console.log(object);
 					$("#task_list").append('<div class="row-fluid"><div data-id="'+object.id+'" class="btn span12 item tl">'+json.title+'<i class="icon-chevron-right" style="float: right;"></i></div></div>');
 					item_bind();
 				});
@@ -323,6 +326,11 @@
 
             $(".estimated_time input[type=number]").change(function(){
             	$(".estimated_time input[type=range]").val($(".estimated_time input.hours").val()*3600 + $(".estimated_time input.minutes").val()*60)
+            });
+            $(".optimized_select").click(function(){
+            	var item = $("#task_list .item");
+            	localStorage['task_id'] = item.attr("data-id");
+            	window.location.href = "countdown.html";
             });
 		});
 	</script>

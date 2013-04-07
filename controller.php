@@ -34,7 +34,7 @@ switch ($_GET['action'])
     case 'getTask':
         $task = new TaskService();
         $task = $task->getTask($_GET['id']);
-        echo(encodeTask(json_encode($task)));
+        echo(json_encode(encodeTask($task)));
         break;
 
     case 'getTasks':
