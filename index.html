@@ -83,8 +83,8 @@
 		                                <label><h5>Estimated time ( for completing )</h5></label>
 	                                	<div class="estimated_time">
 	                                		<i class="icon-time" ></i>
-		                                    <input class="span2 hours" type="text" value="1" placeholder="hh"> hours :
-		                                    <input class="span2 minutes" type="text" value="0" placeholder="mm"> minutes
+		                                    <input class="span2 hours" type="number" min="0" max="23" value="1" placeholder="hh"> hours :
+		                                    <input class="span2 minutes" type="number" min="0" max="59" value="0" placeholder="mm"> minutes
 			                                <input id="time_slider" step="900" type="range" name="time" value="3600" min="0" max="86399" style="width: 95%;">
 		                                </div>
 		                                <label for="info_label"><h5>Label</h5></label>
@@ -110,21 +110,32 @@
 	<script type="text/javascript" src="js/jquery-ui.js"></script>
 	<script type="text/javascript">
 
-		$.fn.extractObject = function() {
-		  var accum = {};
-		  function add(accum, namev, value) {
-		    if (namev.length == 1)
-		      accum[namev[0]] = value;
-		    else {
-		      if (accum[namev[0]] == null)
-		        accum[namev[0]] = {};
-		      add(accum[namev[0]], namev.slice(1), value);
+		jQuery.fn.serializeObject = function() {
+		  var arrayData, objectData;
+		  arrayData = this.serializeArray();
+		  objectData = {};
+
+		  $.each(arrayData, function() {
+		    var value;
+
+		    if (this.value != null) {
+		      value = this.value;
+		    } else {
+		      value = '';
 		    }
-		  };
-		  this.find('input, textarea, select').each(function() {
-		    add(accum, $(this).attr('name').split('.'), $(this).val());
+
+		    if (objectData[this.name] != null) {
+		      if (!objectData[this.name].push) {
+		        objectData[this.name] = [objectData[this.name]];
+		      }
+
+		      objectData[this.name].push(value);
+		    } else {
+		      objectData[this.name] = value;
+		    }
 		  });
-		  return accum;
+
+		  return objectData;
 		};
 
 		$(document).ready(function(){
@@ -148,7 +159,7 @@
 				var item_info = $(".main_container > .row-fluid .item_info");
 				item_info.css("display", "block");
 				item_info.find(".item_title > *").text(item.text());
-				item_info.find(".task_id").val(item_info.attr("data-id"));
+				item_info.find(".task_id").val(item.attr("data-id"));
 				var date = new Date();
 				var month = date.getMonth()+1;
 				if(month < 10)
@@ -191,7 +202,7 @@
 				if(!mandatory_ok)
 					return;
 				var serialized = $(this).serialize();
-				var json = $(this).extractObject();
+				var json = $(this).serializeObject();
 				var $this = $(this);
 				$.post("controller.php?action=addTask", serialized, function(response){
 					$this.find("input").val("");
@@ -250,6 +261,24 @@
             	$(".estimated_time .minutes").val(minutes);
             });
             $(".datepicker").datepicker({dateFormat: "yy-mm-dd"});
+
+            $("#edit_form").submit(function(e){
+            	e.preventDefault();
+            	$(this).find("input:not([type=submit])").each(function(){
+            		if($(this).val().length == 0)
+            			$(this).val(0);
+            	});
+            	var serialized = $(this).serialize();
+            	var json = $(this).serializeObject();
+            	json = JSON.stringify(json);
+            	$.post('controller.php?action=editTask', {data: json}, function(result){
+            		console.log(result);
+            	});
+            });
+
+            $(".estimated_time input[type=number]").change(function(){
+            	$(".estimated_time input[type=range]").val($(".estimated_time input.hours").val()*3600 + $(".estimated_time input.minutes").val()*60)
+            });
 		});
 	</script>
 </body>
