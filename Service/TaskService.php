@@ -61,7 +61,6 @@
 			$task = $this->combineTask($oldTask, $params);
 			
 			$task = $this->evalTask($task);
-			var_dump($task);
 			$task->setId($id);
 
 			$this->persistTask($task);
@@ -80,7 +79,6 @@
 
 
 			$dlDelta = (strtotime($task->getDeadline()) - time()) / 60;
-			echo "delta: " . $dlDelta . "\n";
 			$necessaryTime;
 
 			if ($task->getProgress() <= 0) {
@@ -88,27 +86,22 @@
 			} else {
 				$necessaryTime = ($timeSpent * (100 - $progress)) / $progress;
 			}
-			echo "necerrary:". $necessaryTime . "\n";
 
 			if (($dlDelta - $necessaryTime) >= 0) {
-				$weight = ( 1200000 * ( log($priority) / ( 4 * log( ( ($dlDelta - $necessaryTime) / 300 ) + 2 ) ) + 1 ) ) / ($dlDelta + 500) + 1000;
+				$weight = ( 1200000 * ( log($priority + 0.25) / ( 4 * log( ( ($dlDelta - $necessaryTime) / 300 ) + 2 ) ) + 1 ) ) / ($dlDelta + 500) + 1000;
 				$task->setWeigth(intval($weight));
-				echo "if1 \n" . $weight . "\n";
 				return $task;
 			} 
-			if ($dlDelta >= 0 && $dlDelta < $necessaryTime){
-				$weight = ( 1200000 * ( log($priority) / ( 4 * log( ( $dlDelta / $necessaryTime - 1 ) * 0.75 + 2 ) ) + 1 ) ) / ($dlDelta + 500) + 1000;
+			if ($dlDelta >= $necessaryTime/2 && $dlDelta < $necessaryTime){
+				$weight = ( 1200000 * ( log($priority + 0.25) / ( 4 * log( ( $dlDelta / $necessaryTime - 1 ) * 0.75 + 2 ) ) + 1 ) ) / ($dlDelta + 500) + 1000;
 				$task->setWeigth(intval($weight));
-				echo "if2 \n";
 				return $task;
 			} 
-			if ($dlDelta < 0) {
-				$weight = 1000 + ((0.25 * log($priority) / log(1.25) +1) / 500) * 1200000 - $dlDelta * 0.05; //last parammeter means how fast weight grow aftes DL, 0.05 - 720 per day
+			if ($dlDelta < $necessaryTime/2) {
+				$weight = 1000 + ((0.25 * log($priority) / log(1.25) +1) / 500) * 1200000 - ($dlDelta - $necessaryTime/2) * 0.05; //last parammeter means how fast weight grow aftes DL, 0.05 - 720 per day
 				$task->setWeigth(intval($weight));
-				echo "if3 \n";
 				return $task;
 			}
-			echo "necerrary:". $necessaryTime;
  		}
 
 
@@ -284,7 +277,6 @@
 			$tasks = $this->getTasks();
 
 			foreach ($tasks as $value) {
-				var_dump($value);
 				$task = $this->evalTask($value);
 				$this->persistTask($task);
 			}			
