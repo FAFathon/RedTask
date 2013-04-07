@@ -9,6 +9,9 @@
 			parent::__construct();
 		}
 
+		/**
+		* Get The task by Id
+		*/
 		public function getTask($id) {
 			$params = array('id' => $id);
 			$query1 = "SELECT * FROM `tasks` WHERE `tasks`.`id` = :id";
@@ -18,6 +21,9 @@
 			return $task;
 		}
 
+		/**
+		* Get all the tasks
+		*/
 		public function getTasks() {
 			$tasks;
 			$query = "SELECT * FROM `tasks`";
@@ -25,13 +31,17 @@
 			foreach (self::$db->fetchAll($query) as $value) {
 				$task = new Task($value);
 				$params = array('id' => $task->getId());
-				//$queryLabel = "SELECT * FROM `label_task` LEFT JOIN `labels` ON `label_task`.`label_id` = `labels`.`id` WHERE `label_task`.`task_id` = :id";
-				//$task->uploadLabels(self::$db->fetchAll($queryLabel, $params));
+				$queryLabel = "SELECT * FROM `label_task` LEFT JOIN `labels` ON `label_task`.`label_id` = `labels`.`id` WHERE `label_task`.`task_id` = :id";
+				$task->uploadLabels(self::$db->fetchAll($queryLabel, $params));
 				$tasks[] = $task;
 			}
 			return $tasks;
 		}
 
+
+		/**
+		* Add the task having the name of task
+		*/
         public function addTask($name) {
 			$params = array('name' => $name);
 			$query = "INSERT INTO `tasks` (`tasks`.`title`) VALUES (:name)";
@@ -41,6 +51,9 @@
 		}
 
 
+		/**
+		* Having the params prom the json and task id I evaluate the changes
+		*/
 		public function editTask($id, $params) {
 			$params['id'] = $id;
 			$oldTask = $this->getTask($id);
@@ -54,7 +67,10 @@
 			$this->persistTask($task);
 		}
 
-		public function evalTask($task) {
+		/**
+		* Implement the algorith
+		*/
+		protected function evalTask($task) {
 			if (!$this->verifyTask($task)) 
 				return $task;
 
@@ -94,6 +110,7 @@
 			}
 			echo "necerrary:". $necessaryTime;
  		}
+
 
 		/**
 		* Combine the old task from DB with the new got params from Json
@@ -157,7 +174,7 @@
 		/**
 		* Verify if the weight of the task can be executed
 		*/
-		public function verifyTask($task) {
+		protected function verifyTask($task) {
 			
 			$value = $task->getDeadline();
 			if (!isset($value)) {
@@ -188,7 +205,10 @@
 			return true;
 		}
 
-		public function persistTask($task) {
+		/**
+		* Persist the in the databased
+		*/
+		protected function persistTask($task) {
 			$set_query = "";
 			$params = array();
 
@@ -249,12 +269,7 @@
 			}
 
 			$query = "UPDATE `tasks` SET " . $set_query . " WHERE `tasks`.`id` = :id";
-<<<<<<< HEAD
-			
-=======
-			//echo $query;
 
->>>>>>> d14c3b1384c7ecb3f6d88f141902835c9a9d8c06
 			$value = $task->getId();
 			if (isset($value)) {
 				$params['id'] = $task->getId();
@@ -262,27 +277,18 @@
 			}
 		}
 
+		/**
+		* Process all the tasks and evalutes them with the current time and parameters
+		*/
 		public function processTasks() {
 			$tasks = $this->getTasks();
 
 			foreach ($tasks as $value) {
 				var_dump($value);
-				//$task = $this->evalTask($value);
-				//$this->persistTask($task);
+				$task = $this->evalTask($value);
+				$this->persistTask($task);
 			}			
 		}
 	}
-
-	$params = array('deadline' => '2013-04-8 00:00:00',
-					'time_estimated' => 60*6,
-					'progress' => 0,
-					'time_spent' => 0,
-					'priority' => 3);
-
-	
-	$pearja = new TaskService();
-
-	$pearja->processTasks();
-
 ?>
 
