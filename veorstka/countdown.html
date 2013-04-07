@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>DDN jQuery Countdown</title>
+<link rel="stylesheet" href="style.css" type="text/css" media="screen" />
+<link rel="stylesheet" type="text/css" href="css\bootstrap.css">
+<link rel="stylesheet" type="text/css" href="css\bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="css\bootstrap-responsive.css">
+<link rel="stylesheet" type="text/css" href="css\bootstrap-responsive.min.css">
+<link href='http://fonts.googleapis.com/css?family=Gilda+Display' rel='stylesheet' type='text/css'>
+</head>
+<body>
+
+
+
+
+
+
+
+
+	
+
+	<div class="form-actions">
+    <div class="container-fluid">
+    <button class="btn btn-large btn-primary span3 offset2 onClick='value=\"Continue\"'  ">Pause</button>
+    <button class="btn btn-large btn-danger span3">Finish</button>
+    <button class="btn btn-large btn-primary span3">Stop</button>
+    
+	</div>
+</div>
+
+<div class="container-fluid">
+
+    <div class="hero-unit">
+    <h1 class="text-center" style="font-family:'Gilda Display',Serif;">Time left </h1>
+    <h2 class="text-center text-error">
+    	<div class="countbox" class="text-center muted" style='margin-top:20px;'>
+    	</div>
+    </h2>
+    
+    </div>
+    
+    
+    
+    </div>
+
+</div>
+
+<script type="text/javascript" src="js\jquery.js"></script>
+<script type="text/javascript" src="js\bootstrap.js"></script>
+<script type="text/javascript" src="js\bootstrap.min.js"></script>
+<script type="text/javascript">
+
+
+
+
+
+    
+
+
+
+
+$(document).ready(function(){
+	var min= 1;
+	var secs=min*60;
+	var amount=secs*1000;
+	var total=""+min+"min";
+	var Pause='false';
+	
+	$('#countbox2').html(total);
+	function countProcess()
+	{
+
+
+	        /* time is already past */
+
+
+
+
+
+
+
+
+	        if(amount <= 0){
+	        
+			
+	        
+			$("#pop").modal('show'); 
+	        }
+	        /* date is still good */
+	        else
+	        {
+	                var days=0; var hours=0; mins=0; secs=0; output="";
+	                
+	                amount -=1000;
+	                output="<div id='hours' style='font-size:45px;display:inline;'>" + Math.floor(amount/1000/60/60) +"<div id='hours_text' style='display:inline;'></div></div>h" +
+	                        "<div id='mins' style='font-size:45px;display:inline;'>:" + Math.floor(amount/1000/60) +"<div id='mins_text' style='display:inline;'></div></div>min" +
+	                        "<div id='secs' style='font-size:45px;display:inline;'>:" + eval(Math.floor(amount/1000) - Math.floor(amount/1000/60)*60) +"<div id='secs_text' style='display:inline;'></div></div>s" ;
+	                $('.countbox').html(output);
+	                setTimeout(function(){countProcess();}, 1000);
+	        }
+
+
+	}
+	countProcess()
+});
+</script>
+</body>
+</html>
