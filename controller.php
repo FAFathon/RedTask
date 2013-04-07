@@ -39,7 +39,7 @@ switch ($_GET['action'])
 
     case 'getTasks':
         $task = new TaskService();
-        $tasks = $task->getTasks();
+        $tasks = $task->getProcessedTasks();
         $result = array();
         foreach($tasks AS $elm)
         {
