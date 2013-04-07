@@ -48,7 +48,7 @@
 						</div>
 					</div>
 				</div>
-			</div>	
+			</div>
 
 	        <div class="span4 item_info" style="background-color:rgb(244,244,244); display: none; padding-left:10px; padding-right:10px">
 	            <div class="row-fluid">
@@ -68,13 +68,13 @@
 		                </div>
 		                <div class="row-fluid">
 		                    <div class="span12">
-		                        
+
 		                        <div class="form-actions">
 		                            <label for="deadline" class="span12 tl"><h5>Deadline date</h5></label>
 		                            <div class="controls">
 		                            	<input class="task_id" type="hidden" name="id">
 		                            	<label for="deadline"><i class="icon-calendar" ></i>
-			                                <input id="deadline" name="dl_date" class="span10 datepicker" type="date" placeholder="date">
+			                                <input id="deadline" name="dl_date" class="span10 datepicker" type="text" placeholder="date">
 		                                </label>
 		                                <label for="dl_minutes"><h5>Deadline time</h5></label>
 		                                <i class="icon-time"></i>
@@ -95,11 +95,11 @@
 						                </div>
 		                            </div>
 		                            <input type="submit" name="submit" class="btn btn-primary span12">
-		                        </div>  
+		                        </div>
 		                    </div>
 		                </div>
 	                </form>
-	            </div> 
+	            </div>
 	        </div>
 
 		</div>
@@ -120,7 +120,7 @@
 		        accum[namev[0]] = {};
 		      add(accum[namev[0]], namev.slice(1), value);
 		    }
-		  }; 
+		  };
 		  this.find('input, textarea, select').each(function() {
 		    add(accum, $(this).attr('name').split('.'), $(this).val());
 		  });
