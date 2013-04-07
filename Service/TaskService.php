@@ -26,7 +26,7 @@
 		*/
 		public function getTasks() {
 			$tasks;
-			$query = "SELECT * FROM `tasks`";
+			$query = "SELECT * FROM `tasks` ORDER BY `tasks`.`weight` DESC";
 
 			foreach (self::$db->fetchAll($query) as $value) {
 				$task = new Task($value);
@@ -273,13 +273,16 @@
 		/**
 		* Process all the tasks and evalutes them with the current time and parameters
 		*/
-		public function processTasks() {
+		public function getProcessedTasks() {
 			$tasks = $this->getTasks();
+			$newTasks = array();
 
 			foreach ($tasks as $value) {
 				$task = $this->evalTask($value);
 				$this->persistTask($task);
-			}			
+				$newTasks[] = $task;
+			}
+			return $this->getTasks();
 		}
 	}
 ?>
