@@ -1,0 +1,32 @@
+body {background:#efefef;}
+.container {width:600px;height:140px;margin:320px auto}
+
+h1 {text-align:center;}
+h3 {text-align:center;padding-top:230px !important;}
+a {text-decoration:none;color:#F60;}
+a:hover {text-decoration:none;color:#1b1b1b;}
+
+.countdown_section{ 
+	background:#1b1b1b;
+	width:140px;
+	margin:30px 5px;
+	border-radius:70px;
+	height:140px;
+	float:left;
+	text-align:center;
+}
+.countdown_amount{
+	margin:25px;
+	color:#fff;
+	font-size:32px;
+	font-weight:bold;
+	line-height:85px;
+	text-align:center;
+}
+.countdown_day{
+	text-align:center;
+	font-size:24px;
+	line-height:14px;
+	color:#fff;
+	text-transform:lowercase;
+}
