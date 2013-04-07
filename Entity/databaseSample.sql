@@ -1,5 +1,5 @@
 -- Host: localhost
--- Generation Time: Apr 06, 2013 at 10:03 PM
+-- Generation Time: Apr 07, 2013 at 09:13 AM
 -- Server version: 5.6.10
 -- PHP Version: 5.4.12
 
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS `labels` (
 CREATE TABLE IF NOT EXISTS `label_task` (
   `label_id` int(11) NOT NULL,
   `task_id` int(11) NOT NULL,
-  UNIQUE KEY `l_t` (`label_id`,`task_id`)
+  UNIQUE KEY `label_id` (`label_id`,`task_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -45,13 +45,12 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) DEFAULT NULL,
   `description` text,
-  `deadline` datetime DEFAULT NULL,
-  `time_estimated` int(11) DEFAULT NULL,
-  `time_spent` int(11) DEFAULT NULL,
-  `priority` tinyint(3) DEFAULT NULL,
-  `progress` int(11) DEFAULT NULL,
-  `weight` int(11) DEFAULT NULL,
-  `done` tinyint(1) NOT NULL,
+  `deadline` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `time_estimated` int(11) NOT NULL DEFAULT '60',
+  `time_spent` int(11) NOT NULL DEFAULT '0',
+  `priority` tinyint(3) NOT NULL DEFAULT '2',
+  `progress` int(11) NOT NULL DEFAULT '0',
+  `weight` int(11) NOT NULL DEFAULT '0',
+  `done` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
-
