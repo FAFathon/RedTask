@@ -15,9 +15,19 @@ switch ($_GET['action'])
     case 'editTask':
         $data = json_decode($_POST['data']);
         $data = get_object_vars($data);
+        $id = $data['id'];
+        unset($data['id']);
 
+        $data['deadline'] = $data['dl_date'] . " " . $data['dl_time'] . ":00";
+        unset($data['dl_date']);
+        unset($data['dl_time']);
+        unset($data['hour']);
+        unset($data['minute']);
+        unset($data['label']);
+
+        //var_dump($data);
         $task = new TaskService();
-        $task->editTask($_POST['id'], $data);
+        $task->editTask($id, $data);
         echo(json_encode(true));
         break;
 
